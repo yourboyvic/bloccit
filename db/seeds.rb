@@ -1,4 +1,5 @@
 require "random_data"
+
 # Create Posts
 50.times do
 # #1
@@ -19,6 +20,10 @@ posts = Post.all
     body: RandomData.random_paragraph
   )
 end
+
+puts "#{post.count}"
+Post.find_or_create_by(title: "a unique title", body: "a unique body")
+puts "#{post.count}"
 
 puts "Seed finished"
 puts "#{Post.count} posts created"
