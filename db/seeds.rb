@@ -1,5 +1,12 @@
 require RandomData
 
+15.times do
+  Sponsored_posts.create!(
+    name:         RandomData.random_sentence,
+    description:  RandomData.random_paragraph,
+  )
+end
+
 # Create Topics
 15.times do
   Topic.create!(
@@ -47,3 +54,4 @@ puts "#{Topic.count} topics created"
 puts "#{Post.count} posts created"
 puts "#{Comment.count} comments created"
 puts "#{Questions.count} questions created"
+puts "#{Sponsored_posts.count} sponsored_posts created"
