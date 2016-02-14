@@ -19,5 +19,5 @@ class User < ActiveRecord::Base
 
   has_secure_password
   #this is not a loop though
-  before_save { @name = :name.split.map(&:capitalize).join(' ') }
+  before_save { @name = name.split.map(&:capitalize).join(' ') }
 end
