@@ -84,4 +84,17 @@ end
     end
   end
 
+  def post_params
+    params.require(:post).permit(:create, :update)
+  end
+
+  def authorize_user
+    post = Post.find(params[:id])
+# #11
+    unless current_user == post.user || current_user.moderator?
+      flash[:alert] = "You must be an moderator to do that."
+      redirect_to [post.topic, post]
+    end
+  end
+
 end
