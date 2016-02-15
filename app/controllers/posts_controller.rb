@@ -1,5 +1,7 @@
 class PostsController < ApplicationController
 
+   before_action :require_sign_in, except: :show
+
   @posts.each_with_index do |post, index|
     if index % 5 == 0
       post.title = "SPAM"
@@ -18,12 +20,10 @@ class PostsController < ApplicationController
 
   def create
 # #9
-    @post = Post.new
-    @post.title = params[:post][:title]
-    @post.body = params[:post][:body]
-    @topic = Topic.find(params[:topic_id])
 
-    @post.topic = @topic
+    @topic = Topic.find(params[:topic_id])
+    @post = @topic.posts.build(post_params)
+    @post.user = current_user
 
 # #10
     if @post.save
@@ -43,8 +43,7 @@ class PostsController < ApplicationController
 
   def update
   @post = Post.find(params[:id])
-  @post.title = params[:post][:title]
-  @post.body = params[:post][:body]
+  @post.assign_attributes(post_params)
 
   if @post.save
     flash[:notice] = "Post was updated."
@@ -67,5 +66,11 @@ def destroy
     render :show
   end
 end
+
+  private
+
+  def post_params
+    params.require(:post).permit(:title, :body)
+  end
 
 end
