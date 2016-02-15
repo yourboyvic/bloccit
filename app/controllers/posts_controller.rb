@@ -2,6 +2,8 @@ class PostsController < ApplicationController
 
    before_action :require_sign_in, except: :show
 
+   before_action :authorize_user, except: [:show, :new, :create]
+
   @posts.each_with_index do |post, index|
     if index % 5 == 0
       post.title = "SPAM"
@@ -71,6 +73,15 @@ end
 
   def post_params
     params.require(:post).permit(:title, :body)
+  end
+
+  def authorize_user
+    post = Post.find(params[:id])
+# #11
+    unless current_user == post.user || current_user.admin?
+      flash[:alert] = "You must be an admin to do that."
+      redirect_to [post.topic, post]
+    end
   end
 
 end
