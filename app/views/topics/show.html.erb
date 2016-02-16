@@ -6,16 +6,21 @@
 <% end %>
  <div class="row">
    <div class="col-md-8">
-     <p class="lead"><%= @topic.description %></p>
+     <p class="lead">
+       <%= render partial: "labels/list", locals: { labels: @topic.labels } %>
+       <br />
+       <%= @topic.description %>
+     </p>
  <!-- #10 -->
      <% @topic.posts.each do |post| %>
        <%= render partial: 'posts/post', locals: {post: post } %>
      <% end %>
-     <% @sponsoredpost.posts.each do |post| %>
+     <% @topic.posts.each do |post| %>
        <div class="media">
         <div class="media-body">
           <h4 class="media-heading">
-            <%= link_to post.title, sponsoredpost_path(@sponsoredpost, post) %>
+            <%= link_to post.title, topic_post_path(@topic, post) %>
+            <%= render partial: "labels/list", locals: { labels: post.labels } %>
           </h4>
           <small>
             submitted <%= time_ago_in_words(post.created_at) %> ago by <%= post.user.name %> <br>
@@ -30,7 +35,5 @@
      <%= link_to "New Post", new_topic_post_path(@topic), class: 'btn btn-success' %>
    </div>
  </div>
-   <div class="col-md-4">
-     <%= link_to "New Sponsored Post", new_sponsored_post_path(@SponsoredPost), class: 'btn btn-success' %>
-   </div>
+
  </div>
