@@ -20,7 +20,6 @@
     <%= render @post.comments %>
     </div>
   <% if current_user %>
-<!-- #20 -->
     <%= render 'comments/form', comment: Comment.new, post: @post %>
   <% end %>
 
