@@ -1,4 +1,4 @@
-require RandomData
+require 'random_data'
 require 'rails_helper'
 
 include SessionsHelper

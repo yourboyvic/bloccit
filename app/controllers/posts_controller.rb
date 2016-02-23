@@ -4,13 +4,6 @@ class PostsController < ApplicationController
 
    before_action :authorize_user, except: [:show, :new, :create]
 
-  @posts.each_with_index do |post, index|
-    if index % 5 == 0
-      post.title = "SPAM"
-    end
-  end
-
-
   def show
      @post = Post.find(params[:id])
   end
@@ -21,19 +14,19 @@ class PostsController < ApplicationController
   end
 
   def create
-# #9
+
 
     @topic = Topic.find(params[:topic_id])
     @post = @topic.posts.build(post_params)
     @post.user = current_user
 
-# #10
+
     if @post.save
       @post.labels = Label.update_labels(params[:post][:labels])
       flash[:notice] = "Post was saved."
       redirect_to [@topic, @post]
     else
-# #12
+
       flash.now[:alert] = "There was an error saving the post. Please try again."
       render :new
     end
@@ -60,7 +53,6 @@ end
 def destroy
   @post = Post.find(params[:id])
 
-# #8
   if @post.destroy
     flash[:notice] = "\"#{@post.title}\" was deleted successfully."
     redirect_to @post.topic
@@ -78,7 +70,7 @@ end
 
   def authorize_user
     post = Post.find(params[:id])
-# #11
+
     unless current_user == post.user || current_user.admin?
       flash[:alert] = "You must be an admin to do that."
       redirect_to [post.topic, post]
