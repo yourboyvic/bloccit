@@ -5,18 +5,18 @@ class CommentsController < ApplicationController
   before_action :authorize_user, only: [:destroy]
 
   def create
-# #11
+
     @post = Post.find(params[:post_id])
     comment = @post.comments.new(comment_params)
     comment.user = current_user
 
     if comment.save
       flash[:notice] = "Comment saved successfully."
-# #12
+
       redirect_to [@post.topic, @post]
     else
       flash[:alert] = "Comment failed to save."
-# #13
+
       redirect_to [@post.topic, @post]
     end
   end
@@ -37,13 +37,13 @@ class CommentsController < ApplicationController
 
   private
 
-# #14
+
   def comment_params
     params.require(:comment).permit(:body)
   end
 
 
-  # #16
+
   def authorize_user
     comment = Comment.find(params[:id])
     unless current_user == comment.user || current_user.admin?
