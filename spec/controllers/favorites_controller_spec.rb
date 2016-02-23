@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'random_data'
 include SessionsHelper
 
 RSpec.describe FavoritesController, type: :controller do
