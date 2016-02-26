@@ -20,10 +20,6 @@ RSpec.describe Label, type: :model do
 
       topic_label = topic.labels[0]
       post_label = post.labels[0]
-<<<<<<< HEAD
-=======
-
->>>>>>> checkpoint-45
       expect(topic_label).to eql(post_label)
     end
   end

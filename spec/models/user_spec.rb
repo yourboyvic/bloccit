@@ -1,12 +1,11 @@
 require 'rails_helper'
-require 'random_data'
 
 RSpec.describe User, type: :model do
-  let(:user) { create(:user) }
+  let(:user) { User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "password") }
   it { is_expected.to have_many(:posts) }
   it { is_expected.to have_many(:comments) }
-  it { is_expected.to have_many(:votes) }
-  it { is_expected.to have_many(:favorites) }
+
+  # Shoulda tests for name
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_length_of(:name).is_at_least(1) }
 
@@ -15,7 +14,6 @@ RSpec.describe User, type: :model do
   it { is_expected.to validate_uniqueness_of(:email) }
   it { is_expected.to validate_length_of(:email).is_at_least(3) }
   it { is_expected.to allow_value("user@bloccit.com").for(:email) }
-  it { should_not allow_value("userbloccit.com").for(:email) }
 
   # Shoulda tests for password
   it { is_expected.to validate_presence_of(:password) }
@@ -25,6 +23,10 @@ RSpec.describe User, type: :model do
   describe "attributes" do
     it "should respond to name" do
       expect(user).to respond_to(:name)
+    end
+
+    it "should respond to email" do
+      expect(user).to respond_to(:email)
     end
 
     it "responds to role" do
@@ -75,15 +77,9 @@ RSpec.describe User, type: :model do
     end
   end
 
-    it "should respond to email" do
-      expect(user).to respond_to(:email)
-    end
-  end
-
   describe "invalid user" do
-    let(:user_with_invalid_name) { create(:user, name: "") }
-    let(:user_with_invalid_email) { create(:user, email: "") }
-    let(:user_with_invalid_email_format) { create(:user, email: "invalid_format") }
+    let(:user_with_invalid_name) { User.new(name: "", email: "user@bloccit.com") }
+    let(:user_with_invalid_email) { User.new(name: "Bloccit User", email: "") }
 
     it "should be an invalid user due to blank name" do
       expect(user_with_invalid_name).to_not be_valid
@@ -93,44 +89,5 @@ RSpec.describe User, type: :model do
       expect(user_with_invalid_email).to_not be_valid
     end
 
-    it "should be an invalid user due to incorrectly formatted email address" do
-      expect(user_with_invalid_email_format).to_not be_valid
-    end
-
-    describe "#favorite_for(post)" do
-      before do
-        topic = Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph)
-        @post = topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: user)
-      end
-
-      it "returns `nil` if the user has not favorited the post" do
-
-        expect(user.favorite_for(@post)).to be_nil
-      end
-
-      it "returns the appropriate favorite if it exists" do
-
-        favorite = user.favorites.where(post: @post).create
-
-        expect(user.favorite_for(@post)).to eq(favorite)
-      end
-    end
-
-    describe ".avatar_url" do
-
-      let(:known_user) { create(:user, email: "blochead@bloc.io") }
-
-      it "returns the proper Gravatar url for a known email entity" do
-
-        expected_gravatar = "http://gravatar.com/avatar/bb6d1172212c180cfbdb7039129d7b03.png?s=48"
-
-        expect(known_user.avatar_url(48)).to eq(expected_gravatar)
-      end
-    end
-
-    describe "#generate_auth_token" do
-     it "creates a token" do
-       expect(user.auth_token).to_not be_nil
-     end
-   end
   end
+end
